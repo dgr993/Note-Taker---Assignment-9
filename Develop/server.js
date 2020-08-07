@@ -11,7 +11,6 @@ fs.writeFile("db/db.json", JSON.stringify(myJson), function (err) {
 
 var express = require("express");
 var path = require("path");
-const { json } = require("express");
 
 // Sets up the Express App
 // =============================================================
@@ -63,27 +62,22 @@ app.post("/api/notes", function (req, res) {
 });
 
 app.delete("/api/notes/:id", function (req, res) {
+
+  //get the id out of the req.
   var notesID = req.params.id;
+  //get all the notes out of the database.
   fs.readFile(__dirname + "/db/db.json", function (err, data) {
     if (err) throw err;
     let notes = JSON.parse(data);
-    var newNote = req.body;
-    console.log(notes);
+  
+    var filteredNotes = notes.filter((note) => {return note.id !== notesID})
 
-  for (var i = 0; i < notes.length; i++) {
-    if (notesID === notes[i].text) {
-      let newNote = notes.splice(i, 1) 
-      fs.writeFile(__dirname + "/db/db.json", JSON.stringify(notes), function (err, data) {
-        if (err) throw err;
-        console.log(newNote);
-        res.json(newNote);
-        })
-      return res.json(notes[i]);
-    }
-  }
-})
-
-  return res.json(false);
+    fs.writeFile(__dirname + "/db/db.json", JSON.stringify(filteredNotes), function (err, data) {
+      if (err) throw err;
+      console.log(filteredNotes);
+      res.json(filteredNotes);
+      })
+  });
 });
 
 app.get("*", function (req, res) {
