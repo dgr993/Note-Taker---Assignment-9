@@ -1,8 +1,6 @@
 var fs = require("fs");
 var myJson = require("./db/db.json")
-let notes = [{
-
-}]
+let notes = [{}]
 
 fs.writeFile("db/db.json", JSON.stringify(myJson), function (err) {
   if (err) throw err;
@@ -37,8 +35,10 @@ app.get("/assets/css/styles.css", function (req, res) {
 
 // API's
 app.get("/api/notes", function (req, res) {
+  //get all the notes out of the database.
   fs.readFile(__dirname + "/db/db.json", function (err, data) {
     if (err) throw err;
+  
     let notes = JSON.parse(data);
     return res.json(notes);
   })
@@ -46,7 +46,7 @@ app.get("/api/notes", function (req, res) {
 
 
 app.post("/api/notes", function (req, res) {
-
+//get all the notes out of the database.
   fs.readFile(__dirname + "/db/db.json", function (err, data) {
     if (err) throw err;
     let notes = JSON.parse(data);
